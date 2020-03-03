@@ -7,9 +7,28 @@ class Database
 
 	var $conn ;
 	
-	function __construct() {
+	var $DB_HOST;
+	
+	var $DB_USER;
+	
+	var $DB_PASSWORD;
+	
+	var $DB_NAME;
+	
+	function __construct($h, $u, $p, $d) {
 		//establish the connection on class initialization
-
+		$this->DB_HOST;
+		
+		$this->DB_USER;
+		
+		$this->DB_PASSWORD;
+		
+		$this->DB_NAME;
+	}
+	
+	function connect(){
+		// if not connected already build the connection;
+		if(! $this->conn )
 		$this->conn = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD,DB_NAME) or die ("<br><br><center>Duh! Couldn't connect to DB: " . mysqli_error() . "</center>");
 	}
 	
@@ -32,7 +51,7 @@ class Database
 
 		$this->query = 'SELECT ' . $fields . ' FROM ' . $table;
 
-		if($alias!='') $this->query .= ' as ' . $alias;
+		if( $alias != '' ) $this->query .= ' AS ' . $alias;
 		
 		return $this;
 	}
@@ -142,12 +161,15 @@ class Database
 		return $this;
 	}
 	
-	function run($stop = 0) {
+	function run( $stop = 1) {
 
-		if($stop==1) {
+		if( $stop == 0 || $stop == false ) {
 			echo $this->query; exit;
 		}
 		
+		$this->conn = connect();
+		
+		//try to check for update and delete conditions here.
 		
 		$q = mysqli_query( $this->conn , $this->query) or die( mysqli_error($this->conn).$this->query);
 
